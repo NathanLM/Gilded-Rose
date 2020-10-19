@@ -4,35 +4,36 @@ class GildedRose(var items: Array<Item>) {
 
     fun updateQuality() {
         for (i in items.indices) {
-            if (!itemIsBrie(items, i) && !itemIsBackstagePass(items, i)) {
-                decreaseQuality(items, i)
+            val item = items[i]
+            if (!itemIsBrie(item) && !itemIsBackstagePass(item)) {
+                decreaseQuality(item)
             } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1
+                if (item.quality < 50) {
+                    item.quality = item.quality + 1
 
-                    if (itemIsBackstagePass(items, i)) {
-                        if (items[i].sellIn < 11) {
-                            increaseQuality(items, i)
+                    if (itemIsBackstagePass(item)) {
+                        if (item.sellIn < 11) {
+                            increaseQuality(item)
                         }
 
-                        if (items[i].sellIn < 6) {
-                            increaseQuality(items, i)
+                        if (item.sellIn < 6) {
+                            increaseQuality(item)
                         }
                     }
                 }
             }
 
-            decreaseSellIn(items, i)
+            decreaseSellIn(item)
 
-            if (itemIsExpired(items, i)) {
-                if (!itemIsBrie(items, i)) {
-                    if (!itemIsBackstagePass(items, i)) {
-                        decreaseQuality(items, i)
+            if (itemIsExpired(item)) {
+                if (!itemIsBrie(item)) {
+                    if (!itemIsBackstagePass(item)) {
+                        decreaseQuality(item)
                     } else {
-                        items[i].quality = items[i].quality - items[i].quality
+                        item.quality = item.quality - item.quality
                     }
                 } else {
-                    increaseQuality(items, i)
+                    increaseQuality(item)
                 }
             }
         }
@@ -40,31 +41,31 @@ class GildedRose(var items: Array<Item>) {
 
     /** Conditional expressions **/
 
-    private fun itemIsExpired(items: Array<Item>, i: Int) = items[i].sellIn < 0
+    private fun itemIsExpired(item: Item) = item.sellIn < 0
 
-    private fun itemIsBrie(items: Array<Item>, i: Int) = items[i].name == "Aged Brie"
+    private fun itemIsBrie(item: Item) = item.name == "Aged Brie"
 
-    private fun itemIsBackstagePass(items: Array<Item>, i: Int) = items[i].name == "Backstage passes to a TAFKAL80ETC concert"
+    private fun itemIsBackstagePass(item: Item) = item.name == "Backstage passes to a TAFKAL80ETC concert"
 
-    private fun itemIsSulfuras(items: Array<Item>, i: Int) = items[i].name == "Sulfuras, Hand of Ragnaros"
+    private fun itemIsSulfuras(item: Item) = item.name == "Sulfuras, Hand of Ragnaros"
 
     /** Value modification **/
 
-    private fun decreaseSellIn(items: Array<Item>, i: Int){
-        if (items[i].name != "Sulfuras, Hand of Ragnaros") {
-            items[i].sellIn--
+    private fun decreaseSellIn(item: Item){
+        if (item.name != "Sulfuras, Hand of Ragnaros") {
+            item.sellIn--
         }
     }
 
-    private fun increaseQuality(items: Array<Item>, i: Int){
-        if (items[i].quality < 50 && !itemIsSulfuras(items, i)) {
-            items[i].quality++
+    private fun increaseQuality(item: Item){
+        if (item.quality < 50 && !itemIsSulfuras(item)) {
+            item.quality++
         }
     }
 
-    private fun decreaseQuality(items: Array<Item>, i: Int){
-        if (items[i].quality > 0 && items[i].name != "Sulfuras, Hand of Ragnaros") {
-            items[i].quality--
+    private fun decreaseQuality(item: Item){
+        if (item.quality > 0 && item.name != "Sulfuras, Hand of Ragnaros") {
+            item.quality--
         }
     }
 

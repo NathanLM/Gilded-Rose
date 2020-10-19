@@ -24,10 +24,10 @@ class GildedRose(var items: Array<Item>) {
 
     private fun modifyQualityInCaseOfExpiration(item:Item){
         if (itemIsExpired(item)) {
-            if (itemIsBrie(item)) {
-                increaseQuality(item)
-            } else {
-                decreaseQuality(item)
+            when {
+                itemIsBrie(item) -> increaseQuality(item)
+                itemIsBackstagePass(item) -> item.quality -= item.quality
+                else -> decreaseQuality(item)
             }
         }
     }
@@ -42,12 +42,13 @@ class GildedRose(var items: Array<Item>) {
 
     private fun itemIsSulfuras(item: Item) = item.name == "Sulfuras, Hand of Ragnaros"
 
+
+    private fun itemIsConjured(item:Item) = item.name.contains("conjured", ignoreCase = true)
+
     /** Value modification **/
 
     private fun decreaseSellIn(item: Item){
-        if (itemIsExpired(item) && itemIsBackstagePass(item)) {
-            item.quality -= item.quality
-        } else if (!itemIsSulfuras(item)) {
+        if (!itemIsSulfuras(item)) {
             item.sellIn--
         }
     }
@@ -61,11 +62,14 @@ class GildedRose(var items: Array<Item>) {
                 item.sellIn < 6 -> item.quality += 2
                 item.sellIn < 11 -> item.quality++
             }
+            if(item.quality > 50) item.quality = 50
         }
     }
 
     private fun decreaseQuality(item: Item){
-        if (item.quality > 0 && !itemIsSulfuras(item)) {
+        if(itemIsConjured(item)){
+            item.quality -= 2
+        }else if (item.quality > 0 && !itemIsSulfuras(item)) {
             item.quality--
         }
     }

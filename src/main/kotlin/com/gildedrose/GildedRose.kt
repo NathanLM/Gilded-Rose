@@ -6,24 +6,28 @@ class GildedRose(var items: Array<Item>) {
         for (i in items.indices) {
             val item = items[i]
 
-            if (itemIsBrie(item) || itemIsBackstagePass(item)) {
+            passADay(item)
+
+            modifyQualityInCaseOfExpiration(item)
+        }
+    }
+
+    private fun passADay(item:Item){
+        if (itemIsBrie(item) || itemIsBackstagePass(item)) {
+            increaseQuality(item)
+        } else {
+            decreaseQuality(item)
+        }
+
+        decreaseSellIn(item)
+    }
+
+    private fun modifyQualityInCaseOfExpiration(item:Item){
+        if (itemIsExpired(item)) {
+            if (itemIsBrie(item)) {
                 increaseQuality(item)
             } else {
                 decreaseQuality(item)
-            }
-
-            decreaseSellIn(item)
-
-            if (itemIsExpired(item)) {
-                if (itemIsBrie(item)) {
-                    increaseQuality(item)
-                } else {
-                    if (itemIsBackstagePass(item)) {
-                        item.quality -= item.quality
-                    } else {
-                        decreaseQuality(item)
-                    }
-                }
             }
         }
     }
@@ -41,7 +45,9 @@ class GildedRose(var items: Array<Item>) {
     /** Value modification **/
 
     private fun decreaseSellIn(item: Item){
-        if (!itemIsSulfuras(item)) {
+        if (itemIsExpired(item) && itemIsBackstagePass(item)) {
+            item.quality -= item.quality
+        } else if (!itemIsSulfuras(item)) {
             item.sellIn--
         }
     }

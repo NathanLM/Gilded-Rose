@@ -5,18 +5,7 @@ import org.junit.jupiter.api.Test
 
 internal class GildedRoseTest {
 
-    private fun getNewItemList() = arrayOf(Item("+5 Dexterity Vest", 10, 20), //
-        Item("Aged Brie", 2, 0), //
-        Item("Elixir of the Mongoose", 5, 7), //
-        Item("Sulfuras, Hand of Ragnaros", 0, 80), //
-        Item("Sulfuras, Hand of Ragnaros", -1, 80),
-        Item("Backstage passes to a TAFKAL80ETC concert", 15, 20),
-        Item("Backstage passes to a TAFKAL80ETC concert", 10, 49),
-        Item("Backstage passes to a TAFKAL80ETC concert", 5, 40),
-        // this conjured item does not work properly yet
-        Item("Conjured Mana Cake", 3, 6))
-
-    /** Pass a Day : Sell In decrease **/
+    /** Pass a Day : SellIn decrease **/
 
     private fun assertSellInDeceaseForItem(item:Item){
         val app = GildedRose(arrayOf())
@@ -34,13 +23,49 @@ internal class GildedRoseTest {
         assertSellInDeceaseForItem(Item("New Item", 20, 33))
     }
 
+    /** Pass a Day : quality increase/decrease **/
+    private fun assertQualityDeceaseForItem(item:Item){
+        val app = GildedRose(arrayOf())
+        val originalQuality = item.quality
+        app.passADay(item)
+        assert(item.quality == 0  || item.quality == originalQuality - 1)
+    }
+
+    private fun assertQualityIncreaseForItem(item:Item){
+        val app = GildedRose(arrayOf())
+        val originalQuality = item.quality
+        app.passADay(item)
+        assert(item.quality == 50  || item.quality > originalQuality)
+    }
+
     @Test
-    fun passADay_should_not_decrease_SellIn_For_Sulfuras(){
+    fun passADay_should_decrease_quality() {
+        assertQualityDeceaseForItem(Item("Elixir of the Mongoose", 5, 7))
+        assertQualityDeceaseForItem(Item("Conjured Mana Cake", 3, 6))
+        assertQualityDeceaseForItem(Item("New Item", 50, 33))
+    }
+
+    @Test
+    fun passADay_should_increase_quality_of_Brie() {
+        assertQualityIncreaseForItem(Item("Aged Brie", 2, 0))
+    }
+
+    @Test
+    fun passADay_should_increase_quality_of_BackstagePass() {
+        assertQualityIncreaseForItem(Item("Backstage passes to a TAFKAL80ETC concert", 10, 33))
+    }
+
+    /** Pass a Day : Sulfuras **/
+
+    @Test
+    fun passADay_should_not_decrease_SellIn_or_Quality_for_Sulfuras(){
         val app = GildedRose(arrayOf())
         val sulfurasSellIn = 0
-        val sulfuras = Item("Sulfuras, Hand of Ragnaros", sulfurasSellIn, 80)
+        val sulfurasQuality = 80
+        val sulfuras = Item("Sulfuras, Hand of Ragnaros", sulfurasSellIn, sulfurasQuality)
         app.passADay(sulfuras)
         assertEquals(sulfurasSellIn, sulfuras.sellIn, "The SellIn value of Sulfuras was modified")
+        assertEquals(sulfurasQuality, sulfuras.quality, "The Quality value of Sulfuras was modified")
     }
 
     /** Backstage Pass quality **/

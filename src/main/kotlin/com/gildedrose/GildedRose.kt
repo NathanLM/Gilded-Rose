@@ -12,7 +12,7 @@ class GildedRose(var items: Array<Item>) {
         }
     }
 
-    private fun passADay(item:Item){
+    fun passADay(item:Item){
         if (itemIsBrie(item) || itemIsBackstagePass(item)) {
             increaseQuality(item)
         } else {
@@ -59,7 +59,7 @@ class GildedRose(var items: Array<Item>) {
         if (itemIsBackstagePass(item)) {
             when {
                 item.sellIn < 6 -> item.quality += 2
-                item.sellIn < 11 -> item.quality
+                item.sellIn < 11 -> item.quality++
             }
         }
     }

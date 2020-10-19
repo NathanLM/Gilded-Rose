@@ -1,5 +1,7 @@
 package com.gildedrose
 
+import org.junit.jupiter.api.Assertions
+
 
 private fun getNewItemList() = arrayOf(Item("+5 Dexterity Vest", 10, 20), //
     Item("Aged Brie", 2, 0), //
@@ -26,8 +28,9 @@ fun main(args: Array<String>) {
 
     println("------------ Refactored ------------")
     testRefactoredVersion(items, days)
-}
 
+
+}
 
 private fun testRefactoredVersion(items: Array<Item>, days: Int){
     val app = GildedRose(items)
@@ -52,4 +55,13 @@ private fun printListContent(i: Int, items: Array<Item>){
         println(item)
     }
     println()
+}
+
+private fun compareRefactoredToLegacy(items: Array<Item>, itemsLegacy: Array<Item>){
+    val comparisonArray = items zip itemsLegacy
+    for (itemPair in comparisonArray){
+        Assertions.assertEquals(itemPair.first.name, itemPair.second.name, "The two compared items are different")
+        Assertions.assertEquals(itemPair.first.sellIn, itemPair.second.sellIn, "Inconsistency in the sellIn value for ${itemPair.first.name}")
+        Assertions.assertEquals(itemPair.first.quality, itemPair.second.quality, "Inconsistency in the quality value for ${itemPair.first.name}")
+    }
 }

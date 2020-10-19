@@ -41,8 +41,19 @@ internal class GildedRoseTest {
     @Test
     fun passADay_should_decrease_quality() {
         assertQualityDeceaseForItem(Item("Elixir of the Mongoose", 5, 7))
-        assertQualityDeceaseForItem(Item("Conjured Mana Cake", 3, 6))
         assertQualityDeceaseForItem(Item("New Item", 50, 33))
+    }
+
+    @Test
+    fun passADay_should_decrease_quality_of_conjured_items_twice_as_fast() {
+
+        val app = GildedRose(arrayOf())
+        val originalQuality = 10
+        val item = Item("Conjured Mana Cake", 3, originalQuality)
+        app.passADay(item)
+        assert(item.quality == originalQuality - 2)
+        app.passADay(item)
+        assert(item.quality == originalQuality - 4)
     }
 
     @Test
@@ -70,12 +81,8 @@ internal class GildedRoseTest {
 
     /** Backstage Pass quality **/
 
-    private fun createBacstagePassAndPassADay(){
-
-    }
-
     @Test
-    fun passADay_should_increase_BackstagePass_Once_if_SellIn_Is_More_Than_11() {
+    fun passADay_should_increase_BackstagePass_quality_once_if_SellIn_Is_More_Than_11() {
         val app = GildedRose(arrayOf())
         val backstagePassQuality = 40
         val backstagePass = Item("Backstage passes to a TAFKAL80ETC concert", 20, backstagePassQuality)
@@ -84,7 +91,7 @@ internal class GildedRoseTest {
     }
 
     @Test
-    fun passADay_should_increase_BackstagePass_Twice_if_SellIn_Is_Less_Than_11() {
+    fun passADay_should_increase_BackstagePass_quality_twice_if_SellIn_Is_Less_Than_11() {
         val app = GildedRose(arrayOf())
         val backstagePassQuality = 40
         val backstagePass = Item("Backstage passes to a TAFKAL80ETC concert", 9, backstagePassQuality)
@@ -93,13 +100,22 @@ internal class GildedRoseTest {
     }
 
     @Test
-    fun passADay_should_increase_BackstagePass_Thrice_if_SellIn_Is_Less_Than_6() {
+    fun passADay_should_increase_BackstagePass_quality_thrice_if_SellIn_Is_Less_Than_6() {
         val app = GildedRose(arrayOf())
         val backstagePassQuality = 40
         val backstagePass = Item("Backstage passes to a TAFKAL80ETC concert", 5, backstagePassQuality)
 
         app.passADay(backstagePass)
         assertEquals(backstagePassQuality + 3, backstagePass.quality, "The backstage pass quality was not increased by the correct amount")
+    }
+
+    @Test
+    fun passADay_should_not_increase_BackstagePass_quality_above_50() {
+        val app = GildedRose(arrayOf())
+        val backstagePass = Item("Backstage passes to a TAFKAL80ETC concert", 5, 49)
+
+        app.passADay(backstagePass)
+        assert(backstagePass.quality <= 50)
     }
 
 }

@@ -29,7 +29,7 @@ fun main(args: Array<String>) {
     println("------------ Refactored ------------")
     testRefactoredVersion(items, days)
 
-    compareRefactoredToLegacy(items, itemsLegacy)
+    compareRefactoredToLegacy(itemsLegacy, items)
 }
 
 private fun testRefactoredVersion(items: Array<Item>, days: Int){

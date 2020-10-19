@@ -26,7 +26,7 @@ class GildedRose(var items: Array<Item>) {
         if (itemIsExpired(item)) {
             when {
                 itemIsBrie(item) -> increaseQuality(item)
-                itemIsBackstagePass(item) -> item.quality -= item.quality
+                itemIsBackstagePass(item) -> item.quality = 0
                 else -> decreaseQuality(item)
             }
         }

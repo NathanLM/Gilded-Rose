@@ -5,35 +5,24 @@ class GildedRose(var items: Array<Item>) {
     fun updateQuality() {
         for (i in items.indices) {
             val item = items[i]
-            if (!itemIsBrie(item) && !itemIsBackstagePass(item)) {
-                decreaseQuality(item)
+
+            if (itemIsBrie(item) || itemIsBackstagePass(item)) {
+                increaseQuality(item)
             } else {
-                if (item.quality < 50) {
-                    item.quality = item.quality + 1
-
-                    if (itemIsBackstagePass(item)) {
-                        if (item.sellIn < 11) {
-                            increaseQuality(item)
-                        }
-
-                        if (item.sellIn < 6) {
-                            increaseQuality(item)
-                        }
-                    }
-                }
+                decreaseQuality(item)
             }
 
             decreaseSellIn(item)
 
             if (itemIsExpired(item)) {
-                if (!itemIsBrie(item)) {
-                    if (!itemIsBackstagePass(item)) {
-                        decreaseQuality(item)
-                    } else {
-                        item.quality = item.quality - item.quality
-                    }
-                } else {
+                if (itemIsBrie(item)) {
                     increaseQuality(item)
+                } else {
+                    if (itemIsBackstagePass(item)) {
+                        item.quality -= item.quality
+                    } else {
+                        decreaseQuality(item)
+                    }
                 }
             }
         }
@@ -52,7 +41,7 @@ class GildedRose(var items: Array<Item>) {
     /** Value modification **/
 
     private fun decreaseSellIn(item: Item){
-        if (item.name != "Sulfuras, Hand of Ragnaros") {
+        if (!itemIsSulfuras(item)) {
             item.sellIn--
         }
     }
@@ -61,10 +50,16 @@ class GildedRose(var items: Array<Item>) {
         if (item.quality < 50 && !itemIsSulfuras(item)) {
             item.quality++
         }
+        if (itemIsBackstagePass(item)) {
+            when {
+                item.sellIn < 6 -> item.quality += 2
+                item.sellIn < 11 -> item.quality
+            }
+        }
     }
 
     private fun decreaseQuality(item: Item){
-        if (item.quality > 0 && item.name != "Sulfuras, Hand of Ragnaros") {
+        if (item.quality > 0 && !itemIsSulfuras(item)) {
             item.quality--
         }
     }

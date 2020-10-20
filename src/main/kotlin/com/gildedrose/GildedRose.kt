@@ -3,11 +3,8 @@ package com.gildedrose
 class GildedRose(var items: Array<Item>) {
 
     fun updateQuality() {
-        for (i in items.indices) {
-            val item = items[i]
-
+        for (item in items) {
             passADay(item)
-
             modifyQualityInCaseOfExpiration(item)
         }
     }
